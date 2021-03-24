@@ -1,0 +1,12 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <settings-container child-expand-height='true' child-expand-width='false'>
+    <toggle-setting text='Enabled' value='enabled' on-change='setEnabled' hover-hint='~warningText'></toggle-setting>
+    <horizontal active='~enabled'>
+      <text align='Left' text='~initialNPS'></text>
+      <text align='Left' text='~finalNPS'></text>
+    </horizontal>
+    <increment-setting text='Section Detection' value='beatDivision' on-change='setBeatDivision' increment='0.25' min='0' max='8' hover-hint='(1 / Beats) Higher number means notes have to be closer together in time to be grouped together, making the section detection less agressive'></increment-setting>
+    <increment-setting text='Simplification Detection' value='beatDivision2' on-change='setBeatDivision2' increment='0.25' min='0.5' max='8' hover-hint='(1 / Beats) Higher number means swings have to be closer together in time to be removed when simplifying, making the simplification less agressive'></increment-setting>
+    <toggle-setting text='Simplify Swing Lengths' value='simplifySwingLength' on-change='setSimplifySwingLength' hover-hint='Swings in detected sections will be reduced to a single note whenever possible (i.e. A slider would be reduced to just the first note)'></toggle-setting>
+  </settings-container>
+</bg>

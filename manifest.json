@@ -1,0 +1,14 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/beat-saber-modding-group/BSIPA-MetadataFileSchema/master/Schema.json",
+  "id": "DiffReducer",
+  "name": "DiffReducer",
+  "author": "Kyle 1413",
+  "version": "0.3.1",
+  "description": "Reduce the density of Beatmaps while disabling score submission",
+  "gameVersion": "1.13.2",
+  "dependsOn": {
+    "BSIPA": "^4.1.0",
+    "BS Utils": "^1.7.0",
+    "BeatSaberMarkupLanguage": "^1.4.0"
+  },
+}

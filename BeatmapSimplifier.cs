@@ -8,19 +8,19 @@ namespace DiffReducer
 {
     public static class BeatmapSimplifier
     {
-        public static Tuple<float,float,BeatmapLineData[]> SimplifyBeatmap(BeatmapData beatmap, float bpm)
+        public static Tuple<float,float,List<BeatmapObjectData>> SimplifyBeatmap(BeatmapData beatmap, float bpm)
         {
             float beatDivision = UI.ModifierUI.instance.beatDivision;
             float bps = 60f / bpm;
             float maxTimeDiff = beatDivision <= 0? float.MaxValue : bps / beatDivision;
             float secondaryMaxTimeDiff = bps / UI.ModifierUI.instance.beatDivision2;
             var mapNotes = new List<NoteData>();
-            var objects = beatmap.beatmapObjectsData;
+            var objects = beatmap.allBeatmapDataItems.Where(x => x is BeatmapObjectData).Cast<BeatmapObjectData>();
             foreach (var beatmapObject in objects)
                 if (beatmapObject is NoteData) mapNotes.Add(beatmapObject as NoteData);
             mapNotes.RemoveAll(x => x.colorType == ColorType.None);
             mapNotes = mapNotes.OrderBy(x => x.time).ToList();
-            var objectsWithoutNotes = objects.Where(x => x.beatmapObjectType != BeatmapObjectType.Note || (x.beatmapObjectType == BeatmapObjectType.Note && (x as NoteData).colorType == ColorType.None));
+            var objectsWithoutNotes = objects.Where(x => !x.IsNote());
             List<NoteSection> mapData = new List<NoteSection>();
             NoteSection lastSection = new NoteSection(bps, secondaryMaxTimeDiff);
             foreach (var note in mapNotes)
@@ -56,7 +56,7 @@ namespace DiffReducer
             mapData = mapData.OrderBy(x => x.FirstNote().time).ToList();
             //Simplify map
             var newMap = objectsWithoutNotes.ToList();
-            float initialNPS = objects.Count() > 0 ? objects.Where(x => x.beatmapObjectType == BeatmapObjectType.Note).Count() / objects.Last().time : 0;
+            float initialNPS = objects.Count() > 0 ? objects.Where(x => x.IsNote()).Count() / objects.Last().time : 0;
           //  Plugin.log.Debug($"Initial NPS: {initialNPS}");
             foreach (var section in mapData)
             {
@@ -65,16 +65,9 @@ namespace DiffReducer
         //        Plugin.log.Debug($"Final section swings: {section.swingCount}");
                 newMap.AddRange(section.GetFinalNotes());
             }
-            BeatmapLineData[] newLineData = new BeatmapLineData[4];
-            for (int i = 0; i < 4; i++)
-            {
-                var lineObjects = newMap
-                    .Where(x => x.lineIndex == i || (i == 0 && x.lineIndex <= i) || (i == 3 && x.lineIndex >= i));
-                newLineData[i] = new BeatmapLineData(lineObjects.OrderBy(x => x.time).ToList());
-            }
-            float finalNPS = objects.Count() > 0 ? newMap.Where(x => x.beatmapObjectType == BeatmapObjectType.Note).Count() / objects.Last().time : 0;
+            float finalNPS = objects.Count() > 0 ? newMap.Where(x => x.IsNote()).Count() / objects.Last().time : 0;
        //     Plugin.log.Debug($"Final NPS: {finalNPS}");
-            return new Tuple<float, float, BeatmapLineData[]>(initialNPS, finalNPS, newLineData);
+            return new Tuple<float, float, List<BeatmapObjectData>>(initialNPS, finalNPS, newMap);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace DiffReducer.UI
     class ModifierUI : NotifiableSingleton<ModifierUI>
     {
         public IDifficultyBeatmap currentBeatmap { get; private set; } = null;
-        public BeatmapLineData[] simplifiedMap { get; private set; } = null;
+        public List<BeatmapObjectData> simplifiedMap { get; private set; } = null;
         private string _initialNPSText = "Initial NPS: --";
         [UIValue("initialNPS")]
         public string initialNPSText
@@ -41,7 +41,7 @@ namespace DiffReducer.UI
         internal string warning = "<#BB1111>Warning\nWhen this is active the map is modified and is no longer representative of the quality of the actual map";
         private bool _enabled = false;
         [UIValue("enabled")]
-        public bool enabled
+        public bool modEnabled
         {
             get => _enabled;
             set
@@ -53,7 +53,7 @@ namespace DiffReducer.UI
         [UIAction("setEnabled")]
         void setEnabled(bool value)
         {
-            enabled = value;
+            modEnabled = value;
         }
         private float _beatDivision = 1.5f;
         [UIValue("beatDivision")]
@@ -92,7 +92,7 @@ namespace DiffReducer.UI
             beatDivision2 = value;
             Config.Write();
         }
-        public void UpdateSimplifiedMap(float initialNPS, float newNPS, BeatmapLineData[] newMap)
+        public void UpdateSimplifiedMap(float initialNPS, float newNPS, List<BeatmapObjectData> newMap)
         {
             simplifiedMap = newMap;
             initialNPSText = $"Initial NPS: {initialNPS.ToString("F2")}";
@@ -132,10 +132,10 @@ namespace DiffReducer.UI
                 }
             }
         }
-        public void UpdateSimplifiedBeatmap()
+        public async void UpdateSimplifiedBeatmap()
         {
             if (currentBeatmap == null) return;
-            var result = BeatmapSimplifier.SimplifyBeatmap(currentBeatmap.beatmapData, currentBeatmap.level.beatsPerMinute);
+            var result = BeatmapSimplifier.SimplifyBeatmap(await currentBeatmap.GetBeatmapDataAsync(currentBeatmap.level.environmentInfo, null) as BeatmapData, currentBeatmap.level.beatsPerMinute);
             ModifierUI.instance.UpdateSimplifiedMap(result.Item1, result.Item2, result.Item3);
         }
     }

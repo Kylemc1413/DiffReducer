@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using IPA.Utilities;
 namespace DiffReducer
 {
     class NoteSwing
@@ -28,7 +29,7 @@ namespace DiffReducer
             for (int i = 0; i < _notes.Count; i++)
             {
                 NoteData note = _notes[i];
-                note.MirrorLineIndex(4);
+                note.Mirror(4);
             }
         }
         public void MirrorDirectionSwing()
@@ -36,7 +37,7 @@ namespace DiffReducer
             for (int i = 0; i < _notes.Count; i++)
             {
                 NoteData note = _notes[i];
-                note.MirrorTransformCutDirection();
+               note.ChangeNoteCutDirection(note.cutDirection.Mirrored());
             }
         }
         public void SwapHandSwing()
@@ -44,7 +45,7 @@ namespace DiffReducer
             for (int i = 0; i < _notes.Count; i++)
             {
                 NoteData note = _notes[i];
-                note.SwitchNoteColorType();
+                note.SetProperty("colorType", note.colorType.Opposite());
             }
         }
     }

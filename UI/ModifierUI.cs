@@ -9,6 +9,8 @@ using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.Attributes;
 using UnityEngine;
 using BeatSaberMarkupLanguage.MenuButtons;
+using BeatSaberMarkupLanguage.Util;
+
 namespace DiffReducer.UI
 {
     class ModifierUI : NotifiableSingleton<ModifierUI>

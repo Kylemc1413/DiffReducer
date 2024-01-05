@@ -19,10 +19,11 @@ namespace DiffReducer
 
             BS_Utils.Gameplay.ScoreSubmission.DisableSubmission("DiffReducer");
 
-            __result = beatmapData.GetFilteredCopy(x =>
+            var simplifiedBeatmap = BeatmapSimplifier.SimplifyBeatmap(__result as BeatmapData, UI.ModifierUI.instance.currentBeatmap.level.beatsPerMinute);
+            __result = __result.GetFilteredCopy(x =>
             {
                 
-                if (x is BeatmapObjectData && !UI.ModifierUI.instance.simplifiedMap.Any(y => x.CompareTo(y) == 0))
+                if (x is BeatmapObjectData && !simplifiedBeatmap.newMap.Any(y => x.CompareTo(y) == 0))
                     return null;
                 return x;
             });

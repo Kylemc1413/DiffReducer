@@ -8,7 +8,7 @@ namespace DiffReducer
 {
     public static class BeatmapSimplifier
     {
-        public static Tuple<float,float,List<BeatmapObjectData>> SimplifyBeatmap(BeatmapData beatmap, float bpm)
+        public static (float initialNps, float finalNps, List<BeatmapObjectData> newMap) SimplifyBeatmap(BeatmapData beatmap, float bpm)
         {
             float beatDivision = UI.ModifierUI.instance.beatDivision;
             float bps = 60f / bpm;
@@ -67,7 +67,7 @@ namespace DiffReducer
             }
             float finalNPS = objects.Count() > 0 ? newMap.Where(x => x.IsNote()).Count() / objects.Last().time : 0;
        //     Plugin.log.Debug($"Final NPS: {finalNPS}");
-            return new Tuple<float, float, List<BeatmapObjectData>>(initialNPS, finalNPS, newMap);
+            return (initialNPS, finalNPS, newMap);
         }
     }
 }
